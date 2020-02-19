@@ -50,14 +50,13 @@ export const ApiCaller = <S, E>(
             const axiosResponse = await Axios({
                 method: request.type,
                 url: request.url,
-                responseType: "json",
                 data: request.type != 'get' ? request.request_data : {},
             });
             dispatch(success(axiosResponse.data));
         }
         catch (err) {
             //TODO error parsing 
-            dispatch(error(err));
+            dispatch(error(JSON.stringify(err)));
         }
     }
 
