@@ -16,7 +16,7 @@ export const ApiCaller = <S, E>(
         error: null,
         isLoading: false,
         isApiCalled: false,
-    }
+    };
 
     const apiSlice = createSlice({
         name,
@@ -58,7 +58,7 @@ export const ApiCaller = <S, E>(
             //TODO error parsing 
             dispatch(error(JSON.stringify(err)));
         }
-    }
+    };
 
     return {
         reducer: apiSlice.reducer,

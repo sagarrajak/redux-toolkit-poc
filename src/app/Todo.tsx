@@ -14,7 +14,6 @@ export const todoApiList = ApiCaller({
 }, 'todos_get');
 
 export default function Todo() {
-
     const todos = useSelector<IRootState, IApi<ITodo[]>>(todo => todo.todolist);
     const [todo, setTodo] = useState("");
 
@@ -22,7 +21,7 @@ export default function Todo() {
 
     useEffect(() => {
         dispatch(todoApiList.thunkAction());  
-    }, [])
+    }, []);
 
     return (
         <div>
