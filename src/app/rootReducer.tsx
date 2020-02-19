@@ -1,10 +1,10 @@
 import { combineReducers } from "redux";
 import { IApi } from "../utils/interfaces";
 import { ITodo } from "./interfaces";
-import { todoApi } from "./Todo";
+import { todoApiList } from "./Todo";
 
 export const rootReducer = combineReducers({
-    todolist: todoApi.reducer,
+    todolist: todoApiList.reducer,
 });
 
 export interface IRootState {

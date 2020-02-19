@@ -50,7 +50,7 @@ export const ApiCaller = <S, E>(
             const axiosResponse = await Axios({
                 method: request.type,
                 url: request.url,
-                data: request.type != 'get' ? request.request_data : {},
+                data: request.type !== 'get' ? request.request_data : {},
             });
             dispatch(success(axiosResponse.data));
         }
