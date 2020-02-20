@@ -2,18 +2,6 @@
   "data": [
     {
       "userId": 1,
-      "id": 1,
-      "title": "delectus aut autem",
-      "completed": false
-    },
-    {
-      "userId": 1,
-      "id": 2,
-      "title": "quis ut nam facilis et officia qui",
-      "completed": false
-    },
-    {
-      "userId": 1,
       "id": 3,
       "title": "fugiat veniam minus",
       "completed": false
@@ -53,12 +41,6 @@
       "id": 9,
       "title": "molestiae perspiciatis ipsa",
       "completed": false
-    },
-    {
-      "userId": 1,
-      "id": 10,
-      "title": "illo est ratione doloremque quia maiores aut",
-      "completed": true
     },
     {
       "userId": 1,
@@ -112,12 +94,6 @@
       "userId": 1,
       "id": 19,
       "title": "molestiae ipsa aut voluptatibus pariatur dolor nihil",
-      "completed": true
-    },
-    {
-      "userId": 1,
-      "id": 20,
-      "title": "ullam nobis libero sapiente ad optio sint",
       "completed": true
     },
     {

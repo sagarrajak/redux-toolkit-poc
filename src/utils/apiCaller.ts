@@ -5,19 +5,46 @@ import { TERequest, TEApi } from './interfaces';
 import { TERootState } from '../app/rootReducer';
 import _ from 'lodash';
 
+type RequestThunkAction = {
+    url?: string;
+    type?: 'get' | 'post' | 'put' | 'delete';
+    requestData?: any | null;
+    queryParams?: { [key: string]: any };
+    params?: string[];
+    headers?: { [key: string]: string };
+};
+
 const formatRequest = (request: TERequest): void => {
     if (_.isNil(request.headers)) {
-        request.headers = [];
+        request.headers = {};
     }
     if (_.isNil(request.params)) {
         request.params = [];
     }
     if (_.isNil(request.queryParams)) {
-        request.queryParams = [];
+        request.queryParams = {};
     }
     if (_.isUndefined(request.requestData)) {
         request.requestData = null;
     }
+};
+
+const setHeaders = (request: TERequest): void => {
+    const headers = {
+        'Content-Type': 'application/json',
+        Accept: 'application/json',
+        authorization: localStorage.getItem('usertoken') ? `Token ${localStorage.getItem('usertoken')}` : 'None',
+    };
+    if (_.isNil(request.headers)) {
+        request.headers = headers;
+    } else {
+        request.headers = _.assign({}, request.headers, headers);
+    }
+};
+
+const setParams = (request: TERequest): void => {
+    if (_.isNil(request.params) || request.params.length <= 0) return;
+    request.url = request.url + '/' + request.params.map((str: string) => encodeURIComponent(str)).join('/');
 };
 
 /**
@@ -31,7 +58,7 @@ export const ApiCaller = <S, E = any>(
     request: TERequest,
 ): {
     reducer: Reducer;
-    thunkAction: (request?: TERequest) => any;
+    thunkAction: (request?: RequestThunkAction) => any;
 } => {
     formatRequest(request);
     const initialState: TEApi<S, E> = {
@@ -70,36 +97,33 @@ export const ApiCaller = <S, E = any>(
     const { error, requested, success } = apiSlice.actions;
     const upperScopeRequest = request;
 
-    function thunkAction(request?: TERequest): ThunkAction<Promise<any>, TERootState, unknown, Action<string>> {
+    function thunkAction(
+        request?: RequestThunkAction,
+    ): ThunkAction<Promise<any>, TERootState, unknown, Action<string>> {
         return async (dispatch: ThunkDispatch<TERootState, unknown, Action<string>>): Promise<any> => {
-            if (request) {
-                formatRequest(request);
-                dispatch(requested(request));
-                return Axios({
-                    method: request.type,
-                    url: request.url,
-                    data: request.type !== 'get' ? request.requestData : {},
-                })
-                    .then(axiosResponse => {
-                        return dispatch(success(axiosResponse.data));
-                    })
-                    .catch(err => {
-                        return dispatch(error(JSON.stringify(err)));
-                    });
-            } else {
-                dispatch(requested(null));
-                return Axios({
-                    method: upperScopeRequest.type,
-                    url: upperScopeRequest.url,
-                    data: upperScopeRequest.type !== 'get' ? upperScopeRequest.requestData : {},
-                })
-                    .then(axiosResponse => {
-                        return dispatch(success(axiosResponse.data));
-                    })
-                    .catch(err => {
-                        return dispatch(error(JSON.stringify(err)));
-                    });
+            if (_.isNil(request)) {
+                request = {};
             }
+            const currentRequest = _.assign({}, upperScopeRequest, request);
+            formatRequest(currentRequest);
+            dispatch(requested(currentRequest));
+            setHeaders(currentRequest);
+            setParams(currentRequest);
+            console.log({
+                requestBody: currentRequest,
+            });
+            return Axios({
+                method: currentRequest.type,
+                url: currentRequest.url,
+                data: currentRequest.type !== 'get' ? currentRequest.requestData : {},
+                params: currentRequest.queryParams,
+            })
+                .then(axiosResponse => {
+                    return dispatch(success(axiosResponse.data));
+                })
+                .catch(err => {
+                    return dispatch(error(JSON.stringify(err)));
+                });
         };
     }
 
