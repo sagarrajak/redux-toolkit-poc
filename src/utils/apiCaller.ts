@@ -30,6 +30,7 @@ const setHeaders = (request: TERequest): void => {
         request.headers = headers;
     } else {
         request.headers = _.assign({}, request.headers, headers);
+        console.log(request.headers);
     }
 };
 
@@ -42,7 +43,7 @@ const setParams = (request: TERequest): void => {
  * @param request self explained request params
  * @param name must be unique for every api
  * S = success response type
- * E = error response type
+ * E = error response type default is null
  */
 export const ApiCaller = <S, E = any>(
     name: string,
@@ -105,6 +106,7 @@ export const ApiCaller = <S, E = any>(
                 url: currentRequest.url,
                 data: currentRequest.type !== 'get' ? currentRequest.requestData : {},
                 params: currentRequest.queryParams,
+                headers: currentRequest.headers,
             })
                 .then(axiosResponse => {
                     return dispatch(success(axiosResponse.data));
