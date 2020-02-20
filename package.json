@@ -22,14 +22,15 @@
     "react-redux": "^7.2.0",
     "react-scripts": "3.4.0",
     "redux": "^4.0.5",
-    "start:server": "npx json-server --watch db.json --port 3001",
+    "redux-thunk": "^2.3.0",
     "typescript": "^3.7.5"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "start:server": "npx json-server --watch db.json --port 3001"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -47,6 +48,12 @@
     ]
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.149"
+    "@types/lodash": "^4.14.149",
+    "@typescript-eslint/eslint-plugin": "^2.20.0",
+    "@typescript-eslint/parser": "^2.20.0",
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.10.0",
+    "eslint-plugin-prettier": "^3.1.2",
+    "prettier": "^1.19.1"
   }
 }

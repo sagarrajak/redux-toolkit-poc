@@ -1,19 +1,14 @@
-import { ThunkAction, Action } from "@reduxjs/toolkit";
-import { IRootState } from "../app/rootReducer";
-
-export interface IRequest {
+export interface TERequest {
     url: string;
-    type: 'get' | 'post' | 'put' | 'delete',
-    params: {[key: string]: any}[],
-    headers: {[key: string]: string}[],
-    request_data: any | null, 
+    type: 'get' | 'post' | 'put' | 'delete';
+    queryParams: { [key: string]: any }[];
+    params: string[];
+    headers: { [key: string]: string }[];
+    requestData: any | null;
 }
 
-export interface IApi<S, E=any> extends IRequest {
-    response_data: S | null,
-    error: E | null,
-    isLoading: boolean,
-    isApiCalled: boolean,
+export interface TEApi<S, E = any> extends TERequest {
+    responseData: S | null;
+    error: E | null;
+    isLoading: boolean;
 }
-
-export type IAppThunk = ThunkAction<void, IRootState, unknown, Action<string>>;

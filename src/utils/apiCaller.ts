@@ -1,67 +1,73 @@
-import { createSlice, Reducer } from '@reduxjs/toolkit';
+import { Action, createSlice, Reducer } from '@reduxjs/toolkit';
 import Axios from 'axios';
-import { IApi, IAppThunk, IRequest } from "./interfaces";
+import { ThunkAction, ThunkDispatch } from 'redux-thunk';
+import { TERequest, TEApi } from './interfaces';
+import { TERootState } from '../app/rootReducer';
 
-
-export const ApiCaller = <S, E>(
-    request: IRequest,
+/**
+ * @param request self explained request params
+ * @param name must be unique for every api
+ * S = success response type
+ * E = error option type
+ */
+export const ApiCaller = <S, E = any>(
+    request: TERequest,
     name: string,
 ): {
-    reducer: Reducer,
-    thunkAction: () => IAppThunk
+    reducer: Reducer;
+    thunkAction: any;
 } => {
-    const initialState: IApi<S, E> = {
+    const initialState: TEApi<S, E> = {
         ...request,
-        response_data: null,
+        responseData: null,
         error: null,
         isLoading: false,
-        isApiCalled: false,
     };
 
     const apiSlice = createSlice({
         name,
         initialState,
         reducers: {
-            requested(state) {
-                state.isApiCalled = true;
+            requested(state): void {
                 state.isLoading = true;
-                state.response_data = null;
+                state.responseData = null;
                 state.error = null;
             },
-            success(state, action) {
+            success(state, action): void {
                 state.isLoading = false;
-                state.response_data = action.payload;
+                state.responseData = action.payload;
                 state.error = null;
             },
-            error(state, action) {
+            error(state, action): void {
                 state.isLoading = false;
-                state.response_data = null;
+                state.responseData = null;
                 state.error = action.payload;
-            }
-        }
+            },
+        },
     });
 
     const { error, requested, success } = apiSlice.actions;
 
-    const thunkAction = (): IAppThunk => async (dispatch: any) => {
-        // TODO adding headers, params, request data and base_url from dot.env file 
-        dispatch(requested());
-        try {
-            const axiosResponse = await Axios({
+    function thunkAction(): ThunkAction<Promise<any>, TERootState, unknown, Action<string>> {
+        return async (dispatch: ThunkDispatch<TERootState, unknown, Action<string>>): Promise<any> => {
+            // TODO adding headers, params, request data and base_url from dot.env file
+            dispatch(requested());
+            return Axios({
                 method: request.type,
                 url: request.url,
-                data: request.type !== 'get' ? request.request_data : {},
-            });
-            dispatch(success(axiosResponse.data));
-        }
-        catch (err) {
-            //TODO error parsing 
-            dispatch(error(JSON.stringify(err)));
-        }
-    };
+                data: request.type !== 'get' ? request.requestData : {},
+            })
+                .then(axiosResponse => {
+                    return dispatch(success(axiosResponse.data));
+                })
+                .catch(err => {
+                    return dispatch(error(JSON.stringify(err)));
+                });
+        };
+    }
 
     return {
         reducer: apiSlice.reducer,
         thunkAction,
-    }
+    };
 };
