@@ -1,12 +1,11 @@
 import { combineReducers } from 'redux';
-import { todoApiList, todoApi } from './Todo';
 import { TEApi } from '../utils/interfaces';
 import { TETodo } from './interfaces';
 import { configureStore } from '@reduxjs/toolkit';
+import { todoApiList } from './reducers';
 
 export const rootReducer = combineReducers({
     todoList: todoApiList.reducer,
-    todoSecond: todoApi.reducer,
 });
 
 export interface TERootState {
