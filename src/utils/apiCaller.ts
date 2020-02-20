@@ -1,18 +1,9 @@
 import { Action, createSlice, Reducer, PayloadAction } from '@reduxjs/toolkit';
 import Axios from 'axios';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { TERequest, TEApi } from './interfaces';
+import { TERequest, TEApi, TERequestOverrideOption } from './interfaces';
 import { TERootState } from '../app/rootReducer';
 import _ from 'lodash';
-
-type RequestThunkAction = {
-    url?: string;
-    type?: 'get' | 'post' | 'put' | 'delete';
-    requestData?: any | null;
-    queryParams?: { [key: string]: any };
-    params?: string[];
-    headers?: { [key: string]: string };
-};
 
 const formatRequest = (request: TERequest): void => {
     if (_.isNil(request.headers)) {
@@ -58,7 +49,7 @@ export const ApiCaller = <S, E = any>(
     request: TERequest,
 ): {
     reducer: Reducer;
-    thunkAction: (request?: RequestThunkAction) => any;
+    thunkAction: (request?: TERequestOverrideOption) => any;
 } => {
     formatRequest(request);
     const initialState: TEApi<S, E> = {
@@ -98,7 +89,7 @@ export const ApiCaller = <S, E = any>(
     const upperScopeRequest = request;
 
     function thunkAction(
-        request?: RequestThunkAction,
+        request?: TERequestOverrideOption,
     ): ThunkAction<Promise<any>, TERootState, unknown, Action<string>> {
         return async (dispatch: ThunkDispatch<TERootState, unknown, Action<string>>): Promise<any> => {
             if (_.isNil(request)) {
@@ -109,9 +100,6 @@ export const ApiCaller = <S, E = any>(
             dispatch(requested(currentRequest));
             setHeaders(currentRequest);
             setParams(currentRequest);
-            console.log({
-                requestBody: currentRequest,
-            });
             return Axios({
                 method: currentRequest.type,
                 url: currentRequest.url,

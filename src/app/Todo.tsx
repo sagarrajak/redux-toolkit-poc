@@ -8,7 +8,6 @@ import {
     apiWithParams,
     apiWithQueryParams,
     apiWithCustomHeaders,
-    apiWithAll,
 } from './actions';
 import { TETodo } from './interfaces';
 import { TERootState } from './rootReducer';
@@ -29,7 +28,7 @@ export default function Todo(): ReactElement {
     const todoApiDeleteHandle = (): void => {
         dispatch(
             todoApiDelete.thunkAction({
-                params: ['39230'],
+                params: ['30', '40', '50'],
                 queryParams: { 'This is changed Value': 'dfkjdf dfkjdfkj' },
             }),
         );
@@ -38,17 +37,25 @@ export default function Todo(): ReactElement {
     const todoApiPutHandle = (): void => {
         dispatch(
             todoApiPut.thunkAction({
-                type: 'post',
-                params: ['20'],
+                type: 'put',
+                url: 'http://localhost:3001/data',
+                params: ['7'],
                 requestData: {
                     someData: 'DFdfdf',
+                    dfdfdf: 'DFDFDFDFDf',
+                    dfdfdfd: 'dfdfdf',
+                    yreyueruyeruy: 'wekwjwejwehwe',
                 },
             }),
         );
     };
 
     const apiWithParamsHandle = (): void => {
-        dispatch(apiWithParams.thunkAction());
+        dispatch(
+            apiWithParams.thunkAction({
+                params: ['test', 'params is not new'],
+            }),
+        );
     };
 
     const apiWithQueryParamsHandle = (): void => {
@@ -56,11 +63,13 @@ export default function Todo(): ReactElement {
     };
 
     const apiWithCustomHeadersHandle = (): void => {
-        dispatch(apiWithCustomHeaders.thunkAction());
-    };
-
-    const apiWithAllHandle = (): void => {
-        dispatch(apiWithAll.thunkAction());
+        dispatch(
+            apiWithCustomHeaders.thunkAction({
+                headers: {
+                    'common-headers': 'skjdfjkdf',
+                },
+            }),
+        );
     };
 
     return (
