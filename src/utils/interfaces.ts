@@ -1,3 +1,5 @@
+import { Reducer } from '@reduxjs/toolkit';
+
 export interface TERequest {
     url: string;
     type: 'get' | 'post' | 'put' | 'delete';
@@ -21,3 +23,9 @@ export type TERequestOverrideOption = {
     params?: string[];
     headers?: { [key: string]: string };
 };
+
+export interface TEApiCallerResponse<S> {
+    reducer: Reducer<S>;
+    thunkAction: (request?: TERequestOverrideOption) => any;
+    clear: Reducer;
+}

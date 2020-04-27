@@ -1,5 +1,3 @@
-import { configureStore } from '@reduxjs/toolkit';
-import { combineReducers } from 'redux';
 import { TEApi } from '../utils/interfaces';
 import {
     apiWithAll,
@@ -12,16 +10,6 @@ import {
 } from './actions';
 import { TETodo } from './interfaces';
 
-export const rootReducer = combineReducers({
-    todoApiList: todoApiList.reducer,
-    todoApiDelete: todoApiDelete.reducer,
-    todoApiPut: todoApiPut.reducer,
-    apiWithParams: apiWithParams.reducer,
-    apiWithQueryParams: apiWithQueryParams.reducer,
-    apiWithCustomHeaders: apiWithCustomHeaders.reducer,
-    apiWithAll: apiWithAll.reducer,
-});
-
 export interface TERootState {
     todoApiList: TEApi<TETodo[]>;
     todoApiDelete: TEApi<TETodo[]>;
@@ -32,6 +20,21 @@ export interface TERootState {
     apiWithAll: TEApi<TETodo[]>;
 }
 
-export const store = configureStore({
-    reducer: rootReducer,
-});
+// export const rootReducer = combineReducers<TERootState>({
+//     todoApiList: todoApiList.reducer,
+//     todoApiDelete: todoApiDelete.reducer,
+//     todoApiPut: todoApiPut.reducer,
+//     apiWithParams: apiWithParams.reducer,
+//     apiWithQueryParams: apiWithQueryParams.reducer,
+//     apiWithCustomHeaders: apiWithCustomHeaders.reducer,
+//     apiWithAll: apiWithAll.reducer,
+// });
+export const apiKeys = {
+    apiWithAll,
+    apiWithCustomHeaders,
+    apiWithParams,
+    apiWithQueryParams,
+    todoApiDelete,
+    todoApiList,
+    todoApiPut,
+};

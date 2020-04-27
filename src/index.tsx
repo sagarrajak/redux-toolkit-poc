@@ -1,15 +1,15 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { Provider } from 'react-redux';
 import App from './App';
+import { apiKeys } from './app/rootReducer';
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import { store } from './app/rootReducer';
+import { StoreProvider } from './utils/ApiProvider';
 
 ReactDOM.render(
-    <Provider store={store}>
+    <StoreProvider apiKeys={apiKeys}>
         <App />
-    </Provider>,
+    </StoreProvider>,
     document.getElementById('root'),
 );
 

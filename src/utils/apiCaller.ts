@@ -1,7 +1,7 @@
 import { Action, createSlice, Reducer, PayloadAction } from '@reduxjs/toolkit';
 import Axios from 'axios';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
-import { TERequest, TEApi, TERequestOverrideOption } from './interfaces';
+import { TERequest, TEApi, TERequestOverrideOption, TEApiCallerResponse } from './interfaces';
 import { TERootState } from '../app/rootReducer';
 import _ from 'lodash';
 
@@ -45,13 +45,7 @@ const setParams = (request: TERequest): void => {
  * S = success response type
  * E = error response type default is null
  */
-export const ApiCaller = <S, E = any>(
-    name: string,
-    request: TERequest,
-): {
-    reducer: Reducer;
-    thunkAction: (request?: TERequestOverrideOption) => any;
-} => {
+export const ApiCaller = <S, E = any>(name: string, request: TERequest): TEApiCallerResponse<TEApi<S, E>> => {
     formatRequest(request);
     const initialState: TEApi<S, E> = {
         ...request,
@@ -83,10 +77,15 @@ export const ApiCaller = <S, E = any>(
                 state.responseData = null;
                 state.error = action.payload;
             },
+            clear(state, action): void {
+                state.isLoading = false;
+                state.responseData = null;
+                state.error = null;
+            },
         },
     });
 
-    const { error, requested, success } = apiSlice.actions;
+    const { error, requested, success, clear } = apiSlice.actions;
     const upperScopeRequest = request;
 
     function thunkAction(
@@ -120,5 +119,6 @@ export const ApiCaller = <S, E = any>(
     return {
         reducer: apiSlice.reducer,
         thunkAction,
+        clear,
     };
 };
